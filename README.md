@@ -1,7 +1,7 @@
 base58
 ==========
 
-[![Build Status](http://img.shields.io/travis/decred/base58.svg)](https://travis-ci.org/decred/dcrutil)
+[![Build Status](http://img.shields.io/travis/decred/base58.svg)](https://travis-ci.org/decred/base58)
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
 [![GoDoc](https://godoc.org/github.com/decred/base58?status.png)](http://godoc.org/github.com/decred/base58)
 
