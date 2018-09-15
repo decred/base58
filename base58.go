@@ -35,7 +35,7 @@ func Decode(b string) []byte {
 
 	var numZeros int
 	for numZeros = 0; numZeros < len(b); numZeros++ {
-		if b[numZeros] != alphabetIdx0 {
+		if b[numZeros] != AlphabetIdx0 {
 			break
 		}
 	}
@@ -55,7 +55,7 @@ func Encode(b []byte) string {
 	for x.Cmp(bigZero) > 0 {
 		mod := new(big.Int)
 		x.DivMod(x, bigRadix, mod)
-		answer = append(answer, alphabet[mod.Int64()])
+		answer = append(answer, Alphabet[mod.Int64()])
 	}
 
 	// leading zero bytes
@@ -63,7 +63,7 @@ func Encode(b []byte) string {
 		if i != 0 {
 			break
 		}
-		answer = append(answer, alphabetIdx0)
+		answer = append(answer, AlphabetIdx0)
 	}
 
 	// reverse

@@ -17,6 +17,7 @@ import (
 
 var (
 	start = []byte(`// Copyright (c) 2015 The btcsuite developers
+// Copyright (c) 2015-2018 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
@@ -25,10 +26,11 @@ var (
 package base58
 
 const (
-	// alphabet is the modified base58 alphabet used by Bitcoin.
-	alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+	// Alphabet is the modified base58 alphabet used by Bitcoin.
+	Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
-	alphabetIdx0 = '1'
+    // AlphabetIdx0 is the first character of the Alphabet sequence above
+	AlphabetIdx0 = '1'
 )
 
 var b58 = [256]byte{`)
