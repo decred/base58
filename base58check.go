@@ -26,7 +26,7 @@ func checksum(input []byte) (cksum [4]byte) {
 	h.Reset()
 	h.Write(intermediateHash)
 	finalHash := h.Sum(nil)
-	copy(cksum[:], finalHash[:])
+	copy(cksum[:], finalHash)
 	return
 }
 
@@ -34,7 +34,7 @@ func checksum(input []byte) (cksum [4]byte) {
 func CheckEncode(input []byte, version [2]byte) string {
 	b := make([]byte, 0, 2+len(input)+4)
 	b = append(b, version[:]...)
-	b = append(b, input[:]...)
+	b = append(b, input...)
 	cksum := checksum(b)
 	b = append(b, cksum[:]...)
 	return Encode(b)
