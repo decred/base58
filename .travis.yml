@@ -1,20 +1,10 @@
 language: go
 go:
-  - 1.x
-
-sudo: required
-services:
-  - docker
-
-env:
-  - GOVERSION=1.9
-  - GOVERSION=1.10
-
-install: true
-
-cache:
-  directories:
-    - ~/.cache
-
+  - 1.11.x
+sudo: false
+install:
+  - go get -v github.com/golangci/golangci-lint/cmd/golangci-lint
 script:
-  - ./run_tests.sh $GOVERSION
+  - export GO111MODULE=on
+  - go build
+  - ./goclean.sh
