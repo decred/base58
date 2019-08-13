@@ -8,7 +8,7 @@ package base58
 import (
 	"errors"
 
-	"github.com/dchest/blake256"
+	"github.com/decred/dcrd/crypto/blake256"
 )
 
 // ErrChecksum indicates that the checksum of a check-encoded string does not verify against
