@@ -1,16 +1,14 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015 The Decred developers
+// Copyright (c) 2015-2019 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package base58_test
+package base58
 
 import (
 	"bytes"
 	"encoding/hex"
 	"testing"
-
-	"github.com/decred/base58"
 )
 
 var stringTests = []struct {
@@ -67,7 +65,7 @@ func TestBase58(t *testing.T) {
 	// Encode tests
 	for x, test := range stringTests {
 		tmp := []byte(test.in)
-		if res := base58.Encode(tmp); res != test.out {
+		if res := Encode(tmp); res != test.out {
 			t.Errorf("Encode test #%d failed: got: %s want: %s",
 				x, res, test.out)
 			continue
@@ -81,7 +79,7 @@ func TestBase58(t *testing.T) {
 			t.Errorf("hex.DecodeString failed failed #%d: got: %s", x, test.in)
 			continue
 		}
-		if res := base58.Decode(test.out); !bytes.Equal(res, b) {
+		if res := Decode(test.out); !bytes.Equal(res, b) {
 			t.Errorf("Decode test #%d failed: got: %q want: %q",
 				x, res, test.in)
 			continue
@@ -90,7 +88,7 @@ func TestBase58(t *testing.T) {
 
 	// Decode with invalid input
 	for x, test := range invalidStringTests {
-		if res := base58.Decode(test.in); string(res) != test.out {
+		if res := Decode(test.in); string(res) != test.out {
 			t.Errorf("Decode invalidString test #%d failed: got: %q want: %q",
 				x, res, test.out)
 			continue

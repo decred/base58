@@ -1,14 +1,12 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015 The Decred developers
+// Copyright (c) 2015-2019 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package base58_test
+package base58
 
 import (
 	"testing"
-
-	"github.com/decred/base58"
 )
 
 var checkEncodingStringTests = []struct {
@@ -35,12 +33,12 @@ func TestBase58Check(t *testing.T) {
 		ver[0] = test.version
 		ver[1] = 0
 		// test encoding
-		if res := base58.CheckEncode([]byte(test.in), ver); res != test.out {
+		if res := CheckEncode([]byte(test.in), ver); res != test.out {
 			t.Errorf("CheckEncode test #%d failed: got %s, want: %s", x, res, test.out)
 		}
 
 		// test decoding
-		res, version, err := base58.CheckDecode(test.out)
+		res, version, err := CheckDecode(test.out)
 		if err != nil {
 			t.Errorf("CheckDecode test #%d failed with err: %v", x, err)
 		} else if version != ver {
@@ -52,8 +50,8 @@ func TestBase58Check(t *testing.T) {
 
 	// test the two decoding failure cases
 	// case 1: checksum error
-	_, _, err := base58.CheckDecode("Axk2WA6M")
-	if err != base58.ErrChecksum {
+	_, _, err := CheckDecode("Axk2WA6M")
+	if err != ErrChecksum {
 		t.Error("Checkdecode test failed, expected ErrChecksum")
 	}
 	// case 2: invalid formats (string lengths below 5 mean the version byte and/or the checksum
@@ -61,8 +59,8 @@ func TestBase58Check(t *testing.T) {
 	testString := ""
 	for len := 0; len < 4; len++ {
 		// make a string of length `len`
-		_, _, err = base58.CheckDecode(testString)
-		if err != base58.ErrInvalidFormat {
+		_, _, err = CheckDecode(testString)
+		if err != ErrInvalidFormat {
 			t.Error("Checkdecode test failed, expected ErrInvalidFormat")
 		}
 	}

@@ -1,36 +1,34 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015 The Decred developers
+// Copyright (c) 2015-2019 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package base58_test
+package base58
 
 import (
 	"bytes"
 	"testing"
-
-	"github.com/decred/base58"
 )
 
 func BenchmarkBase58Encode(b *testing.B) {
-	b.StopTimer()
 	data := bytes.Repeat([]byte{0xff}, 5000)
 	b.SetBytes(int64(len(data)))
-	b.StartTimer()
 
+	b.ReportAllocs()
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		base58.Encode(data)
+		Encode(data)
 	}
 }
 
 func BenchmarkBase58Decode(b *testing.B) {
-	b.StopTimer()
 	data := bytes.Repeat([]byte{0xff}, 5000)
-	encoded := base58.Encode(data)
+	encoded := Encode(data)
 	b.SetBytes(int64(len(encoded)))
-	b.StartTimer()
 
+	b.ReportAllocs()
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		base58.Decode(encoded)
+		Decode(encoded)
 	}
 }
