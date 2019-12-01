@@ -1,11 +1,12 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015 The Decred developers
+// Copyright (c) 2015-2019 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
 package base58
 
 import (
+	"bytes"
 	"errors"
 
 	"github.com/decred/dcrd/crypto/blake256"
@@ -19,15 +20,10 @@ var ErrChecksum = errors.New("checksum error")
 var ErrInvalidFormat = errors.New("invalid format: version and/or checksum bytes missing")
 
 // checksum: first four bytes of double-BLAKE256.
-func checksum(input []byte) (cksum [4]byte) {
-	h := blake256.New()
-	h.Write(input)
-	intermediateHash := h.Sum(nil)
-	h.Reset()
-	h.Write(intermediateHash)
-	finalHash := h.Sum(nil)
-	copy(cksum[:], finalHash)
-	return
+func checksum(input []byte) []byte {
+	intermediateHash := blake256.Sum256(input)
+	finalHash := blake256.Sum256(intermediateHash[:])
+	return finalHash[:4]
 }
 
 // CheckEncode prepends two version bytes and appends a four byte checksum.
@@ -35,25 +31,24 @@ func CheckEncode(input []byte, version [2]byte) string {
 	b := make([]byte, 0, 2+len(input)+4)
 	b = append(b, version[:]...)
 	b = append(b, input...)
-	cksum := checksum(b)
-	b = append(b, cksum[:]...)
+	b = append(b, checksum(b)...)
 	return Encode(b)
 }
 
 // CheckDecode decodes a string that was encoded with CheckEncode and verifies
 // the checksum.
-func CheckDecode(input string) (result []byte, version [2]byte, err error) {
+func CheckDecode(input string) ([]byte, [2]byte, error) {
 	decoded := Decode(input)
 	if len(decoded) < 6 {
 		return nil, [2]byte{0, 0}, ErrInvalidFormat
 	}
-	version = [2]byte{decoded[0], decoded[1]}
-	var cksum [4]byte
-	copy(cksum[:], decoded[len(decoded)-4:])
-	if checksum(decoded[:len(decoded)-4]) != cksum {
+	version := [2]byte{decoded[0], decoded[1]}
+	dataLen := len(decoded) - 4
+	decodedChecksum := decoded[dataLen:]
+	calculatedChecksum := checksum(decoded[:dataLen])
+	if !bytes.Equal(decodedChecksum, calculatedChecksum) {
 		return nil, [2]byte{0, 0}, ErrChecksum
 	}
-	payload := decoded[2 : len(decoded)-4]
-	result = append(result, payload...)
-	return
+	payload := decoded[2:dataLen]
+	return payload, version, nil
 }
