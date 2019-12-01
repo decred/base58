@@ -5,14 +5,7 @@
 
 package base58
 
-import (
-	"math/big"
-)
-
 //go:generate go run genalphabet.go
-
-var bigRadix = big.NewInt(58)
-var bigZero = big.NewInt(0)
 
 // Decode decodes a modified base58 string to a byte slice.
 func Decode(input string) []byte {
@@ -71,30 +64,55 @@ func Decode(input string) []byte {
 }
 
 // Encode encodes a byte slice to a modified base58 string.
-func Encode(b []byte) string {
-	x := new(big.Int)
-	x.SetBytes(b)
+func Encode(input []byte) string {
+	// Since the conversion is from base256 to base58, the max possible number
+	// of bytes of output per input byte is log_58(256) ~= 1.37.  Thus, the max
+	// total output size is ceil(len(input) * 137/100).  Rather than worrying
+	// about the ceiling, just add one even if it isn't needed since the final
+	// output is truncated to the right size at the end.
+	output := make([]byte, (len(input)*137/100)+1)
 
-	answer := make([]byte, 0, len(b)*136/100)
-	for x.Cmp(bigZero) > 0 {
-		mod := new(big.Int)
-		x.DivMod(x, bigRadix, mod)
-		answer = append(answer, alphabet[mod.Int64()])
+	// Encode to base58 in reverse order to avoid extra calculations to
+	// determine the final output size in favor of just keeping track while
+	// iterating.
+	var index int
+	for _, r := range input {
+		// Multiply each byte in the output by 256 and encode to base58 while
+		// propagating the carry.
+		val := uint32(r)
+		for i, b := range output[:index] {
+			val += uint32(b) << 8
+			output[i] = byte(val % 58)
+			val /= 58
+		}
+		for ; val > 0; val /= 58 {
+			output[index] = byte(val % 58)
+			index++
+		}
 	}
 
-	// leading zero bytes
-	for _, i := range b {
-		if i != 0 {
+	// Replace the calculated remainders with their corresponding base58 digit.
+	for i, b := range output[:index] {
+		output[i] = alphabet[b]
+	}
+
+	// Account for the leading zeros in the input.  They are appended since the
+	// encoding is happening in reverse order.
+	for _, r := range input {
+		if r != 0 {
 			break
 		}
-		answer = append(answer, alphabetIdx0)
+
+		output[index] = alphabetIdx0
+		index++
 	}
 
-	// reverse
-	alen := len(answer)
-	for i := 0; i < alen/2; i++ {
-		answer[i], answer[alen-1-i] = answer[alen-1-i], answer[i]
+	// Truncate the output buffer to the actual number of encoded bytes and
+	// reverse it since it was calculated in reverse order.
+	output = output[:index:index]
+	for i := 0; i < index/2; i++ {
+		output[i], output[index-1-i] = output[index-1-i], output[i]
 	}
 
-	return string(answer)
+	return string(output)
 }
