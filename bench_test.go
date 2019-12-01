@@ -6,13 +6,15 @@
 package base58
 
 import (
-	"bytes"
 	"testing"
+
+	"github.com/decred/dcrd/crypto/blake256"
 )
 
 func BenchmarkBase58Encode(b *testing.B) {
-	data := bytes.Repeat([]byte{0xff}, 5000)
-	b.SetBytes(int64(len(data)))
+	var input [20]byte
+	hash := blake256.Sum256(input[:])
+	data := hash[:]
 
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -22,13 +24,35 @@ func BenchmarkBase58Encode(b *testing.B) {
 }
 
 func BenchmarkBase58Decode(b *testing.B) {
-	data := bytes.Repeat([]byte{0xff}, 5000)
-	encoded := Encode(data)
-	b.SetBytes(int64(len(encoded)))
+	var input [20]byte
+	hash := blake256.Sum256(input[:])
+	encoded := Encode(hash[:])
 
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Decode(encoded)
+	}
+}
+
+var (
+	noElideResult  []byte
+	noElideVersion [2]byte
+)
+
+// BenchmarkCheckDecode benchmarks how long it takes to perform a base58 check
+// decode on a typical input.
+func BenchmarkCheckDecode(b *testing.B) {
+	var input [20]byte
+	encoded := CheckEncode(input[:], [2]byte{0x07, 0x3f})
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		noElideResult, noElideVersion, err = CheckDecode(encoded)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
