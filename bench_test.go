@@ -38,6 +38,7 @@ func BenchmarkBase58Decode(b *testing.B) {
 var (
 	noElideResult  []byte
 	noElideVersion [2]byte
+	noElideEncoded string
 )
 
 // BenchmarkCheckDecode benchmarks how long it takes to perform a base58 check
@@ -54,5 +55,18 @@ func BenchmarkCheckDecode(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
+	}
+}
+
+// BenchmarkCheckEncode benchmarks how long it takes to perform a base58 check
+// encode on a typical input.
+func BenchmarkCheckEncode(b *testing.B) {
+	var input [20]byte
+	version := [2]byte{0x07, 0x3f}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		noElideEncoded = CheckEncode(input[:], version)
 	}
 }
