@@ -19,11 +19,13 @@ var ErrChecksum = errors.New("checksum error")
 // ErrInvalidFormat indicates that the check-encoded string has an invalid format.
 var ErrInvalidFormat = errors.New("invalid format: version and/or checksum bytes missing")
 
-// checksum: first four bytes of double-BLAKE256.
-func checksum(input []byte) []byte {
+// checksum returns the first four bytes of BLAKE256(BLAKE256(input)).
+func checksum(input []byte) [4]byte {
+	var calculatedChecksum [4]byte
 	intermediateHash := blake256.Sum256(input)
 	finalHash := blake256.Sum256(intermediateHash[:])
-	return finalHash[:4]
+	copy(calculatedChecksum[:], finalHash[:])
+	return calculatedChecksum
 }
 
 // CheckEncode prepends two version bytes and appends a four byte checksum.
@@ -31,7 +33,8 @@ func CheckEncode(input []byte, version [2]byte) string {
 	b := make([]byte, 0, 2+len(input)+4)
 	b = append(b, version[:]...)
 	b = append(b, input...)
-	b = append(b, checksum(b)...)
+	calculatedChecksum := checksum(b)
+	b = append(b, calculatedChecksum[:]...)
 	return Encode(b)
 }
 
@@ -46,7 +49,7 @@ func CheckDecode(input string) ([]byte, [2]byte, error) {
 	dataLen := len(decoded) - 4
 	decodedChecksum := decoded[dataLen:]
 	calculatedChecksum := checksum(decoded[:dataLen])
-	if !bytes.Equal(decodedChecksum, calculatedChecksum) {
+	if !bytes.Equal(decodedChecksum, calculatedChecksum[:]) {
 		return nil, [2]byte{0, 0}, ErrChecksum
 	}
 	payload := decoded[2:dataLen]
