@@ -11,6 +11,8 @@ import (
 	"github.com/decred/dcrd/crypto/blake256"
 )
 
+// BenchmarkBase58Encode benchmarks how long it takes to perform a base58 encode
+// on a typical input.
 func BenchmarkBase58Encode(b *testing.B) {
 	var input [20]byte
 	hash := blake256.Sum256(input[:])
@@ -23,6 +25,8 @@ func BenchmarkBase58Encode(b *testing.B) {
 	}
 }
 
+// BenchmarkBase58Decode benchmarks how long it takes to perform a base58 decode
+// on a typical input.
 func BenchmarkBase58Decode(b *testing.B) {
 	var input [20]byte
 	hash := blake256.Sum256(input[:])
