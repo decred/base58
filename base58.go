@@ -22,7 +22,7 @@ func Decode(input string) []byte {
 	// determine the final output size in favor of just keeping track while
 	// iterating.
 	var index int
-	for _, r := range input {
+	for _, r := range []byte(input) {
 		// Invalid base58 character.
 		val := uint32(b58[r])
 		if val == 255 {
@@ -44,7 +44,7 @@ func Decode(input string) []byte {
 
 	// Account for the leading zeros in the input.  They are appended since the
 	// encoding is happening in reverse order.
-	for _, r := range input {
+	for _, r := range []byte(input) {
 		if r != alphabetIdx0 {
 			break
 		}
