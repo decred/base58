@@ -3,7 +3,7 @@ base58
 
 [![Build Status](https://github.com/decred/base58/workflows/Build%20and%20Test/badge.svg)](https://github.com/decred/base58/actions)
 [![ISC License](https://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
-[![GoDoc](https://godoc.org/github.com/decred/base58?status.png)](https://godoc.org/github.com/decred/base58)
+[![Doc](https://img.shields.io/badge/doc-reference-blue.svg)](https://pkg.go.dev/github.com/decred/base58)
 
 Package base58 provides an API for encoding and decoding to and from the
 modified base58 encoding.  It also provides an API to do Base58Check encoding,
