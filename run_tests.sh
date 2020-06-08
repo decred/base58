@@ -10,6 +10,7 @@ set -ex
 # 5. gosimple      (https://github.com/dominikh/go-simple)
 # 6. unconvert     (https://github.com/mdempsky/unconvert)
 # 7. ineffassign   (https://github.com/gordonklaus/ineffassign)
+# 8. misspell      (https://github.com/client9/misspell)
 
 # run tests
 env GORACE="halt_on_error=1" go test -race ./...
@@ -24,4 +25,5 @@ golangci-lint run --disable-all --deadline=10m \
   --enable=vet \
   --enable=gosimple \
   --enable=unconvert \
-  --enable=ineffassign
+  --enable=ineffassign \
+  --enable=misspell
