@@ -11,6 +11,7 @@ set -ex
 # 6. unconvert     (https://github.com/mdempsky/unconvert)
 # 7. ineffassign   (https://github.com/gordonklaus/ineffassign)
 # 8. misspell      (https://github.com/client9/misspell)
+# 9. deadcode      (https://github.com/remyoudompheng/go-misc/tree/master/deadcode)
 
 # run tests
 env GORACE="halt_on_error=1" go test -race ./...
@@ -26,4 +27,5 @@ golangci-lint run --disable-all --deadline=10m \
   --enable=gosimple \
   --enable=unconvert \
   --enable=ineffassign \
-  --enable=misspell
+  --enable=misspell \
+  --enable=deadcode
