@@ -3,13 +3,13 @@
 set -ex
 
 # The script does automatic checking on a Go package and its sub-packages, including:
-# 1. gofmt         (http://golang.org/cmd/gofmt/)
-# 2. golint        (https://github.com/golang/lint)
-# 3. go vet        (http://golang.org/cmd/vet)
-# 4. gosimple      (https://github.com/dominikh/go-simple)
-# 5. unconvert     (https://github.com/mdempsky/unconvert)
-# 6. ineffassign   (https://github.com/gordonklaus/ineffassign)
-# 7. race detector (http://blog.golang.org/race-detector)
+# 1. race detector (http://blog.golang.org/race-detector)
+# 2. gofmt         (http://golang.org/cmd/gofmt/)
+# 3. golint        (https://github.com/golang/lint)
+# 4. go vet        (http://golang.org/cmd/vet)
+# 5. gosimple      (https://github.com/dominikh/go-simple)
+# 6. unconvert     (https://github.com/mdempsky/unconvert)
+# 7. ineffassign   (https://github.com/gordonklaus/ineffassign)
 
 # run tests
 env GORACE="halt_on_error=1" go test -race ./...
