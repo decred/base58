@@ -1,5 +1,5 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015-2019 The Decred developers
+// Copyright (c) 2015-2021 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
@@ -39,12 +39,6 @@ func BenchmarkBase58Decode(b *testing.B) {
 	}
 }
 
-var (
-	noElideResult  []byte
-	noElideVersion [2]byte
-	noElideEncoded string
-)
-
 // BenchmarkCheckDecode benchmarks how long it takes to perform a base58 check
 // decode on a typical input.
 func BenchmarkCheckDecode(b *testing.B) {
@@ -55,7 +49,7 @@ func BenchmarkCheckDecode(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		var err error
-		noElideResult, noElideVersion, err = CheckDecode(encoded)
+		_, _, err = CheckDecode(encoded)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -71,6 +65,6 @@ func BenchmarkCheckEncode(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		noElideEncoded = CheckEncode(input[:], version)
+		CheckEncode(input[:], version)
 	}
 }
