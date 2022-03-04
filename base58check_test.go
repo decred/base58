@@ -1,11 +1,12 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015-2019 The Decred developers
+// Copyright (c) 2015-2021 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
 package base58
 
 import (
+	"errors"
 	"strings"
 	"testing"
 )
@@ -42,12 +43,13 @@ func TestBase58Check(t *testing.T) {
 
 		// Test decoding.
 		gotDecoded, version, err := CheckDecode(test.encoded)
-		if err != nil {
+		switch {
+		case err != nil:
 			t.Errorf("CheckDecode test #%d failed with err: %v", i, err)
-		} else if version != test.version {
+		case version != test.version:
 			t.Errorf("CheckDecode test #%d failed: got version: %x, want: %x",
 				i, version, test.version)
-		} else if string(gotDecoded) != test.decoded {
+		case string(gotDecoded) != test.decoded:
 			t.Errorf("CheckDecode test #%d failed: got: %q, want: %q", i,
 				gotDecoded, test.decoded)
 		}
@@ -56,7 +58,7 @@ func TestBase58Check(t *testing.T) {
 	// Test the two decoding failure cases:
 	// case 1: Checksum error.
 	_, _, err := CheckDecode("Axk2WA6M")
-	if err != ErrChecksum {
+	if !errors.Is(err, ErrChecksum) {
 		t.Error("Checkdecode test failed, expected ErrChecksum")
 	}
 	// case 2: invalid formats (string lengths below 6 mean the version byte
@@ -64,7 +66,7 @@ func TestBase58Check(t *testing.T) {
 	for size := 0; size < 6; size++ {
 		testString := strings.Repeat("1", size)
 		_, _, err = CheckDecode(testString)
-		if err != ErrInvalidFormat {
+		if !errors.Is(err, ErrInvalidFormat) {
 			t.Error("Checkdecode test failed, expected ErrInvalidFormat")
 		}
 	}
