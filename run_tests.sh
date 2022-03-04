@@ -22,7 +22,7 @@ env GORACE="halt_on_error=1" go test -race ./...
 # check linters
 golangci-lint run --disable-all --deadline=10m \
   --enable=gofmt \
-  --enable=golint \
+  --enable=revive \
   --enable=vet \
   --enable=gosimple \
   --enable=unconvert \
