@@ -8,6 +8,7 @@ package base58
 import (
 	"bytes"
 	"encoding/hex"
+	"strings"
 	"testing"
 )
 
@@ -123,4 +124,36 @@ func TestBase58DecodeInvalid(t *testing.T) {
 			continue
 		}
 	}
+}
+
+// FuzzDecode provides a fuzzing target for [Decode].
+func FuzzDecode(f *testing.F) {
+	f.Add("")
+	for i := 0; i < 256; i++ {
+		f.Add(string([]byte{byte(i)}))
+	}
+	f.Add("10")
+	f.Add("11")
+	f.Add("210")
+	f.Add("211")
+	f.Add("1110")
+	f.Add("1111")
+	f.Add("71111")
+	f.Add("11111111")
+	f.Add("21111111")
+	f.Add("211111111111")
+	f.Add("1111111111111111")
+	f.Add(strings.Repeat("1", 87))
+	f.Add("2" + strings.Repeat("1", 127))
+	f.Add("2111111111111111111111111")
+	f.Add("11111111111111111111111111111111")
+	f.Add("2111111111111111111111111111111111111111")
+	f.Add("2" + strings.Repeat("1", 156))
+	f.Add("7" + strings.Repeat("1", 169))
+	f.Add("1117" + strings.Repeat("1", 344))
+	f.Add("X" + strings.Repeat("1", 693))
+	f.Add(strings.Repeat("1", 128))
+	f.Fuzz(func(t *testing.T, input string) {
+		Decode(input)
+	})
 }
