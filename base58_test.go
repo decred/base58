@@ -41,20 +41,55 @@ func TestBase58Coding(t *testing.T) {
 		{[]byte("abc"), "ZiCa"},
 		{[]byte("1234598760"), "3mJr7AoUXx2Wqd"},
 		{[]byte("abcdefghijklmnopqrstuvwxyz"), "3yxU3u1igY8WkgtjK92fbJQCd4BZiiT1v25f"},
-		{[]byte("00000000000000000000000000000000000000000000000000000000000000"), "3sN2THZeE9Eh9eYrwkvZqNstbHGvrxSAM7gXUXvyFQP8XvQLUqNCS27icwUeDT7ckHm4FUHM2mTVh1vbLmk7y"},
+		{
+			[]byte("00000000000000000000000000000000000000000000000000000000000000"),
+			"3sN2THZeE9Eh9eYrwkvZqNstbHGvrxSAM7gXUXvyFQP8XvQLUqNCS27icwUeDT7ckHm4FUHM2mTVh1vbLmk7y",
+		},
+		{
+			bytes.Repeat([]byte("0"), 200),
+			"KdhzWGVLoe2Z7u7v8kU6dSjNhdK8HNqQbVswpifqRXqmC5a6eFUoTLjhu41kZtTc" +
+				"6Am7Dzp8FcpoMubGyeiAinFQzGavztm4nnAm65i72UDh3FsTLbkoJf5oVNvx" +
+				"VALvaqWzugRNxNEs75g75wyubjXGhFxk4etvhvfdxu7JiwhXk1cWwnLUPjMY" +
+				"DGMFi2BEd8qMkB2wE8ACUHwdk3hHYuwaYKbEpFzjVQZwsRQo8JoFYozwdrFB" +
+				"Ys1F5NW6AtTVKMefQ6MGpGCxcjsWw",
+		},
 
 		// Hex inputs.
 		{hexToBytes("61"), "2g"},
 		{hexToBytes("626262"), "a3gV"},
 		{hexToBytes("636363"), "aPEr"},
-		{hexToBytes("73696d706c792061206c6f6e6720737472696e67"), "2cFupjhnEsSn59qHXstmK2ffpLv2"},
-		{hexToBytes("00eb15231dfceb60925886b67d065299925915aeb172c06647"), "1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L"},
+		{
+			hexToBytes("73696d706c792061206c6f6e6720737472696e67"),
+			"2cFupjhnEsSn59qHXstmK2ffpLv2",
+		},
+		{
+			hexToBytes("00eb15231dfceb60925886b67d065299925915aeb172c06647"),
+			"1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L",
+		},
 		{hexToBytes("516b6fcd0f"), "ABnLTmg"},
 		{hexToBytes("bf4f89001e670274dd"), "3SEo3LWLoPntC"},
 		{hexToBytes("572e4794"), "3EFU7m"},
 		{hexToBytes("ecac89cad93923c02321"), "EJDM8drfXA6uyA"},
 		{hexToBytes("10c8511e"), "Rt5zm"},
+		{
+			hexToBytes("426018fe18ee72f798faacf8ed1efcd786577ad07f33124120fc9" +
+				"537ba97fbe5c5dbd46b66ebd88d11b650b06662914b12aa80ca90110d9b5" +
+				"7337c45ee224cf6ba1d9a3aaf92a232dfebc251c78753fe9f9215bfe7c43" +
+				"744"),
+			"XyJrepxxsECdexAWReSjewTiyL6Ekj5W22bSqxjZfCUsns6QpSHD8bKw33z1YrDZ" +
+				"yD3S1H4iQawvXMTfxfjm8SdyCo8W989jvzEj4qUdZwzjgkMaz7Jx2fCw",
+		},
+		{hexToBytes("0000000002060730"), "111141111"},
+		{hexToBytes("00"), "1"},
+		{hexToBytes("0000"), "11"},
+		{hexToBytes("000000"), "111"},
+		{hexToBytes("00000000"), "1111"},
+		{hexToBytes("0000000000"), "11111"},
 		{hexToBytes("00000000000000000000"), "1111111111"},
+		{hexToBytes("0000000000000000000000"), "11111111111"},
+		{hexToBytes("000000000000000000000000"), "111111111111"},
+		{hexToBytes("00000000000000000000000000"), "1111111111111"},
+		{hexToBytes("0000000000000000000000000000"), "11111111111111"},
 	}
 
 	for i, test := range tests {
@@ -65,8 +100,8 @@ func TestBase58Coding(t *testing.T) {
 		}
 
 		if res := Decode(test.encoded); !bytes.Equal(res, test.decoded) {
-			t.Errorf("Decode test #%d failed: got: %q, want: %q", i, res,
-				test.decoded)
+			t.Errorf("Decode test #%d failed: got: %q (%#[2]x), want: %q "+
+				"(%#[3]x)", i, res, test.decoded)
 			continue
 		}
 	}
