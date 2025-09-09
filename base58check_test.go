@@ -14,6 +14,8 @@ import (
 // TestBase58Check ensures [CheckDecode] and [CheckEncode] produce the expected
 // results for inputs with a given version as well as decoding errors.
 func TestBase58Check(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		version [2]byte
 		decoded string

@@ -24,6 +24,8 @@ func hexToBytes(origHex string) []byte {
 // TestBase58Coding ensures [Decode] and [Encode] produce the expected results
 // for both strings and raw byte data converted from hex.
 func TestBase58Coding(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		decoded []byte
 		encoded string
@@ -73,6 +75,8 @@ func TestBase58Coding(t *testing.T) {
 // TestBase58DecodeInvalid ensures [Decode] produces an empty result when
 // provided with invalid base58 encodings.
 func TestBase58DecodeInvalid(t *testing.T) {
+	t.Parallel()
+
 	tests := []string{
 		"0", "O", "I", "l", "3mJr0", "O3yxU", "3sNI", "4kl8", "0OIl",
 		"!@#$%^&*()-_=+~`",
