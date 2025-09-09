@@ -1,5 +1,5 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015-2021 The Decred developers
+// Copyright (c) 2015-2025 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-// TestBase58Check ensures CheckDecode and CheckEncode produces the expected
+// TestBase58Check ensures [CheckDecode] and [CheckEncode] produce the expected
 // results for inputs with a given version as well as decoding errors.
 func TestBase58Check(t *testing.T) {
 	tests := []struct {

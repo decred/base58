@@ -12,11 +12,12 @@ import (
 	"github.com/decred/dcrd/crypto/blake256"
 )
 
-// ErrChecksum indicates that the checksum of a check-encoded string does not verify against
-// the checksum.
+// ErrChecksum indicates that the checksum of a check-encoded string does not
+// verify against the checksum.
 var ErrChecksum = errors.New("checksum error")
 
-// ErrInvalidFormat indicates that the check-encoded string has an invalid format.
+// ErrInvalidFormat indicates that the check-encoded string has an invalid
+// format.
 var ErrInvalidFormat = errors.New("invalid format: version and/or checksum bytes missing")
 
 // checksum returns the first four bytes of BLAKE256(BLAKE256(input)).
@@ -38,7 +39,7 @@ func CheckEncode(input []byte, version [2]byte) string {
 	return Encode(b)
 }
 
-// CheckDecode decodes a string that was encoded with CheckEncode and verifies
+// CheckDecode decodes a string that was encoded with [CheckEncode] and verifies
 // the checksum.
 func CheckDecode(input string) ([]byte, [2]byte, error) {
 	decoded := Decode(input)

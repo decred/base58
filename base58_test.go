@@ -1,5 +1,5 @@
 // Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2015-2019 The Decred developers
+// Copyright (c) 2015-2025 The Decred developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-// hexToBytes is a wrapper around hex.DecodeString that panics if there is an
+// hexToBytes is a wrapper around [hex.DecodeString] that panics if there is an
 // error.  It MUST only be used with hard coded values in the tests.
 func hexToBytes(origHex string) []byte {
 	buf, err := hex.DecodeString(origHex)
@@ -21,8 +21,8 @@ func hexToBytes(origHex string) []byte {
 	return buf
 }
 
-// TestBase58Coding ensures Decode and Encode produces the expected results for
-// both strings and raw byte data converted from hex.
+// TestBase58Coding ensures [Decode] and [Encode] produce the expected results
+// for both strings and raw byte data converted from hex.
 func TestBase58Coding(t *testing.T) {
 	tests := []struct {
 		decoded []byte
@@ -70,8 +70,8 @@ func TestBase58Coding(t *testing.T) {
 	}
 }
 
-// TestBase58DecodeInvalid ensures Decode produces an empty result when provided
-// with invalid base58 encodings.
+// TestBase58DecodeInvalid ensures [Decode] produces an empty result when
+// provided with invalid base58 encodings.
 func TestBase58DecodeInvalid(t *testing.T) {
 	tests := []string{
 		"0", "O", "I", "l", "3mJr0", "O3yxU", "3sNI", "4kl8", "0OIl",
